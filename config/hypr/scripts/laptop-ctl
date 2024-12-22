@@ -1,0 +1,323 @@
+#!/bin/bash
+
+
+################################################################################
+# Touchpad Control
+################################################################################
+
+# For disabling touchpad.
+# Edit the Touchpad_Device on ~/.config/hypr/UserConfigs/Laptops.conf according to your system
+# use hyprctl devices to get your system touchpad device name
+# source https://github.com/hyprwm/Hyprland/discussions/4283?sort=new#discussioncomment-8648109
+
+notif="$HOME/.config/swaync/images/bell.png"
+
+export TOUCHPAD_STATUS_FILE="$XDG_RUNTIME_DIR/touchpad.status"
+
+enable-touchpad() {
+    printf "true" >"$TOUCHPAD_STATUS_FILE"
+    notify-send -e -h string:x-canonical-private-synchronous:touchpad -u low -i $notif  "Enabling touchpad"
+    hyprctl keyword '$TOUCHPAD_ENABLED' "true" -r
+}
+
+disable-touchpad() {
+    printf "false" >"$TOUCHPAD_STATUS_FILE"
+    notify-send -e -h string:x-canonical-private-synchronous:touchpad -u low -i $notif "Disabling touchpad"
+    hyprctl keyword '$TOUCHPAD_ENABLED' "false" -r
+}
+
+toggle-touchpad() {
+  if ! [ -f "$TOUCHPAD_STATUS_FILE" ]; then
+    enable-touchpad
+  else
+    if [ $(cat "$TOUCHPAD_STATUS_FILE") = "true" ]; then
+      disable-touchpad
+    elif [ $(cat "$TOUCHPAD_STATUS_FILE") = "false" ]; then
+      enable-touchpad
+    fi
+  fi
+}
+
+
+################################################################################
+# play system sounds.
+################################################################################
+
+sound() {
+
+theme="freedesktop" # Set the theme for the system sounds.
+
+# Choose the sound to play.
+if [[ "$1" == "--screenshot" ]]; then
+    soundoption="screen-capture.*"
+elif [[ "$1" == "--volume" ]]; then
+    soundoption="audio-volume-change.*"
+else
+    echo -e "Available sounds: --screenshot, --volume"
+    exit 0
+fi
+
+# Set the directory defaults for system sounds.
+userDIR="$HOME/.local/share/sounds"
+systemDIR="/usr/share/sounds"
+defaultTheme="freedesktop"
+
+# Prefer the user's theme, but use the system's if it doesn't exist.
+sDIR="$systemDIR/$defaultTheme"
+if [ -d "$userDIR/$theme" ]; then
+    sDIR="$userDIR/$theme"
+elif [ -d "$systemDIR/$theme" ]; then
+    sDIR="$systemDIR/$theme"
+fi
+
+# Get the theme that it inherits.
+iTheme=$(cat "$sDIR/index.theme" | grep -i "inherits" | cut -d "=" -f 2)
+iDIR="$sDIR/../$iTheme"
+
+# Find the sound file and play it.
+sound_file=$(find $sDIR/stereo -name "$soundoption" -print -quit)
+if ! test -f "$sound_file"; then
+    sound_file=$(find $iDIR/stereo -name "$soundoption" -print -quit)
+    if ! test -f "$sound_file"; then
+        sound_file=$(find $userDIR/$defaultTheme/stereo -name "$soundoption" -print -quit)
+        if ! test -f "$sound_file"; then
+            sound_file=$(find $systemDIR/$defaultTheme/stereo -name "$soundoption" -print -quit)
+            if ! test -f "$sound_file"; then
+                echo "Error: Sound file not found."
+                exit 1
+            fi
+        fi
+    fi
+fi
+
+pw-play "$sound_file"
+
+}
+
+################################################################################
+# Volume Control
+################################################################################
+
+# Get Volume
+get-volume() {
+    volume=$(pamixer --get-volume)
+    if [[ "$volume" -eq "0" ]]; then
+        echo "Muted"
+    else
+        echo "$volume%"
+    fi
+}
+
+# Notify
+notify-user() {
+    if [[ "$(get-volume)" == "Muted" ]]; then
+        notify-send -e -h string:x-canonical-private-synchronous:volume_notif -u low " Muted"
+    else
+        notify-send -e -h int:value:"$(get-volume | sed 's/%//')" -h string:x-canonical-private-synchronous:volume_notif -u low " Volume: $(get_volume)"
+        sound --volume
+    fi
+}
+
+# Increase Volume
+inc-volume() {
+    if [ "$(pamixer --get-mute)" == "true" ]; then
+        pamixer -u && notify-user
+    fi
+    pamixer -i 5 && notify-user
+}
+
+# Decrease Volume
+dec-volume() {
+    if [ "$(pamixer --get-mute)" == "true" ]; then
+        pamixer -u && notify-user
+    fi
+    pamixer -d 5 && notify-user
+}
+
+# Toggle Mute
+toggle-mute() {
+	if [ "$(pamixer --get-mute)" == "false" ]; then
+		pamixer -m && notify-send -e  -h string:x-canonical-private-synchronous:volume_notif -u low "  Speaker OFF"
+	elif [ "$(pamixer --get-mute)" == "true" ]; then
+		pamixer -u && notify-send -e  -h string:x-canonical-private-synchronous:volume_notif -u low "  Speaker ON"
+	fi
+}
+
+# Toggle Mic
+toggle-mic() {
+	if [ "$(pamixer --default-source --get-mute)" == "false" ]; then
+		pamixer --default-source -m && notify-send -e -h string:x-canonical-private-synchronous:volume_notif -u low " Microphone Switched OFF"
+	elif [ "$(pamixer --default-source --get-mute)" == "true" ]; then
+		pamixer -u --default-source u && notify-send -e -h string:x-canonical-private-synchronous:volume_notif -u low " Microphone Switched ON"
+	fi
+}
+
+# Get Microphone Volume
+get-mic-volume() {
+    volume=$(pamixer --default-source --get-volume)
+    if [[ "$volume" -eq "0" ]]; then
+        echo "Muted"
+    else
+        echo "$volume%"
+    fi
+}
+
+# Notify for Microphone
+notify-mic-user() {
+    volume=$(get-mic-volume)
+    notify-send -e -h int:value:"$volume" -h "string:x-canonical-private-synchronous:volume_notif" -u low  " Mic-Level: $volume"
+}
+
+# Increase MIC Volume
+inc-mic-volume() {
+    if [ "$(pamixer --default-source --get-mute)" == "true" ]; then
+        pamixer --default-source -u && notify-mic-user
+    fi
+    pamixer --default-source -i 5 && notify-mic-user
+}
+
+# Decrease MIC Volume
+dec-mic-volume() {
+    if [ "$(pamixer --default-source --get-mute)" == "true" ]; then
+        pamixer --default-source -u && notify-mic-user
+    fi
+    pamixer --default-source -d 5 && notify-mic-user
+}
+
+volume(){ 
+  # Execute accordingly
+  if [[ "$1" == "--get" ]]; then
+    get-volume
+  elif [[ "$1" == "--inc" ]]; then
+    inc-volume
+  elif [[ "$1" == "--dec" ]]; then
+    dec-volume
+  elif [[ "$1" == "--toggle" ]]; then
+    toggle-mute
+  elif [[ "$1" == "--toggle-mic" ]]; then
+    toggle-mic
+  elif [[ "$1" == "--mic-inc" ]]; then
+    inc-mic-volume
+  elif [[ "$1" == "--mic-dec" ]]; then
+    dec-mic-volume
+  else
+    get-volume
+  fi
+}
+
+enable-airplane-mode() {
+    rfkill block wifi
+    notify-send -u low -i "$notif" 'Airplane mode: ON'
+}
+
+disable-airplane-mode() {
+    rfkill unblock wifi
+    notify-send -u low -i "$notif" 'Airplane mode: OFF'
+}
+
+
+notification_timeout=1000
+
+# Get brightness
+get-brightness() {
+	echo $(brightnessctl -m | cut -d, -f4)
+}
+
+# Notify
+notify-level() {
+	notify-send -e -h string:x-canonical-private-synchronous:$1 -h int:value:$2 -u low -i "$notif" "$1 : $2$3"
+}
+
+# Notify
+notify_br() {
+	notify-send -e -h string:x-canonical-private-synchronous:brightness_notif -h int:value:$1 -u low -i "$notif" "Brightness : $1"
+}
+
+# Change brightness
+change-brightness() {
+brightnessctl set "$1" 
+notify_br "$(get-brightness)"
+}
+
+inc-brightness() {
+		change-brightness "+10%"
+}
+
+dec-brightness() {
+		change-brightness "10%-"
+}
+
+brightness() {
+  case "$1" in
+    "--get")
+      get-brightness
+      ;;
+    "--inc")
+      change-brightness "+5%"
+      ;;
+    "--dec")
+      change-brightness "5%-"
+      ;;
+    *)
+      get-brightness
+      ;;
+  esac
+}
+
+# Get keyboard brightness
+get-kbdlevel() {
+	echo $(brightnessctl -d '*::kbd_backlight' -m | cut -d, -f3)
+}
+
+# Change brightness
+change-kbdlevel() {
+	brightnessctl -d *::kbd_backlight set "$1" 
+  L=$(expr $(expr "$(get-kbdlevel)" '*' 33) + 1) 
+  notify-level "keyboard LED" "$L"
+  #&& notify-level "keyboard LED" "$(get-kbdlevel)"
+}
+
+inc-kbdlevel() {
+  change-kbdlevel "+1"
+}
+
+dec-kbdlevel() {
+  change-kbdlevel "1-"
+}
+
+kbdlevel() {
+  #FILE=$(find /sys/devices/ -name brightness | grep asus::kbd_backlight)
+  #LEVEL=$(cat $FILE)
+  LEVEL=$(get-kbdlevel)
+  if [ "$1" == "" ]; then
+    NEXT=$(expr $LEVEL + 1)
+  else
+    NEXT=$1
+  fi
+  #echo $LEVEL $NEXT
+  if [ $NEXT -gt 3 ]; then
+    NEXT=0
+  fi
+  #echo $NEXT | sudo tee $FILE > /dev/null
+  change-kbdlevel $NEXT
+}
+
+set-kbdlevel() {
+# Execute accordingly
+case "$1" in
+  "--get")
+    get-kbdlevel
+    ;;
+  "--inc")
+    inc-kbdlevel
+    ;;
+  "--dec")
+    dec-kbdlevel
+    ;;
+  *)
+    get-kbdlevel
+    ;;
+esac
+}
+
+$@

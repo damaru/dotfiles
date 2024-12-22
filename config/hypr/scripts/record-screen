@@ -1,0 +1,31 @@
+#!/bin/sh
+
+function monitor() {
+    local monitor=`hyprctl -j monitors | jq -r '.[0].name'`
+    #echo "Capturing: ${monitor}"
+    hyprctl -j monitors | jq '.[0]' | jq -r '"\(.x),\(.y) \(.width/.scale|round)x\(.height/.scale|round)"'
+}
+
+function area() {
+  slurp
+}
+
+window() {
+  w_pos=$(hyprctl activewindow | grep 'at:' | cut -d':' -f2 | tr -d ' ' | tail -n1)
+  w_size=$(hyprctl activewindow | grep 'size:' | cut -d':' -f2 | tr -d ' ' | tail -n1 | sed s/,/x/g)
+  #echo "$w_pos $w_size"
+}
+
+OUTPUT=/tmp/shot-$(date +%S-%M-%s).mp4
+
+function save_geometry() {
+    local geometry="${1}"
+    echo "Geometry: ${geometry} => Output: ${OUTPUT}"
+    wf-recorder --audio=alsa_output.pci-0000_c5_00.6.HiFi__Speaker__sink.monitor -g "${geometry}" -f "$OUTPUT" 2> /dev/null &
+    #wf-recorder -a -g "${geometry}" -f "$OUTPUT" 2> /dev/null &
+    wait $!
+    nautilus -w -s $OUTPUT 2> /dev/null > /dev/null &
+}
+pgrep wf-recorder && exit -1
+save_geometry "$($1)" 
+

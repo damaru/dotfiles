@@ -1,0 +1,86 @@
+// ### DEFAULT ### //
+{
+"include": "~/.config/waybar/modules",
+"layer": "top",
+//"mode": "dock",
+"exclusive": true,
+"passthrough": false,
+"position": "top",
+"spacing": 3,
+"fixed-center": true,
+"ipc": true,
+"margin-top": 0,
+"margin-left": 8,
+"margin-right": 8,
+
+"modules-left": [
+	//"custom/float",	
+	//"cpu",
+	//"temperature",
+	//"memory",
+	//"custom/separator#dot-line",
+	//"custom/weather",
+	//"custom/separator#dot-line",
+	//"network#speed",
+	//"custom/separator#dot-line", 
+	//"custom/cava_mviz",
+	"custom/menu",
+	"custom/separator#dot-line",
+	"hyprland/window", 
+],
+
+"modules-center": [
+	"custom/separator#dot-line",
+  "hyprland/workspaces#custom",
+	"custom/swaync",
+	"custom/separator#dot-line",
+], 
+
+"modules-right": [
+	"custom/separator#dot-line",
+	"tray",
+	"custom/recorder",
+	"power-profiles-daemon",
+	//"bluetooth",
+	//"custom/keybinds",	
+	//"custom/cycle_wall",	
+	//"custom/lock",
+	//"custom/light_dark",
+	//"idle_inhibitor", 
+	//"network#speed",
+	//"wireplumber", 
+
+
+	"group/audio",
+	"group/laptop",
+	"clock",
+	"hyprland/submap",
+	"keyboard-state",
+  "custom/separator#dot-line",
+	"custom/float",
+	"custom/fullscreen",
+	"custom/close",	
+  "custom/separator#dot-line",
+	"custom/power"
+	],
+
+"wlr/workspaces": { 
+    "format": "{icon}",
+    "format-icons" :  {
+		"default" : "1",
+		"1" : "➊",
+		"2" : "➋",
+		"3" : "➌",
+		"4" : "❹",
+		"5" : "➎",
+		"6" : "➏",
+		"7" : "➐",
+		"8" : "➑",
+		"9" : "➒",
+		//"active": "󱓻",
+		//"urgent": "󱓻"
+	},
+	"on-click": "activate" 
+    },
+
+}

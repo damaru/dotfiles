@@ -1,0 +1,41 @@
+#!/bin/bash
+
+if [ -z $1 ]; then
+  SHADER=$(cat /tmp/hyprland-shader 2> /dev/null)
+
+#  if [ "$SHADER" == "" ]; then
+#    SHADER="desat" 
+#   elif [ "$SHADER" == "desat" ]; then
+#     SHADER="desat-blf" 
+#  elif [ "$SHADER" == "desat-blf" ]; then
+#    SHADER="gs" 
+#  elif [ "$SHADER" == "gs" ]; then
+#    SHADER="inv" 
+#  elif [ "$SHADER" == "inv" ]; then
+#    SHADER="normal" 
+#  elif [ "$SHADER" == "normal" ]; then
+#    SHADER="desat" 
+#  else
+#    SHADER="normal" 
+#  fi
+
+NEXT=$(ls /home/damaru/.config/hypr/shaders/ | grep $SHADER -A1 | tail -1)
+echo $NEXT
+NEXT=$(basename $NEXT .glsl)
+echo $NEXT
+
+
+if [ "$NEXT" == "$SHADER" ]; then
+  SHADER="desat-blf"
+else
+  SHADER=$NEXT
+fi
+
+else
+  SHADER=$1
+fi
+
+
+notify-send -e  -h string:x-canonical-private-synchronous:shader -u low "Shader: ${SHADER}"
+hyprctl keyword decoration:screen_shader /home/damaru/.config/hypr/shaders/${SHADER}.glsl
+echo $SHADER > /tmp/hyprland-shader

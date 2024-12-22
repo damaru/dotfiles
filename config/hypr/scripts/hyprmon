@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+PATH=$PATH:/home/damaru/bin
+killall hyprmon
+kill -9 $(ps -efa | grep bash | grep hyprmon | nth 1)
+while true; do
+  if pgrep -x Hyprland >/dev/null; then
+    echo Hyprland is running > /tmp/hyprmon.log
+  else
+    echo Hyprland is dead >> /tmp/hyprmon.log
+    rm /run/user/1000/wayland-1.lock >> /tmp/hyprmon.log
+    Hyprland 2>> /tmp/hyprmon.log >> /tmp/hyprmon.log & 
+  fi
+  sleep 1
+done

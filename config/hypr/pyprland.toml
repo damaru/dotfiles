@@ -1,0 +1,69 @@
+[pyprland]
+plugins = [
+    "expose",
+    "shift_monitors",
+    "fetch_client_menu",
+    "layout_center",
+    "lost_windows",
+    "magnify",
+     "scratchpads",
+    "workspaces_follow_focus"
+]
+
+[_scratchpads.term]
+animation = "fromTop"
+command = "kitty --class kitty-dropterm"
+class = "kitty-dropterm"
+size = "75% 60%"
+max_size = "1920px 100%"
+margin = 50
+
+[scratchpads.skype]
+animation = "fromRight"
+command = "/home/damaru/bin/skype-wl"
+class = "Skype"
+size = "40% 80%"
+margin = 50
+
+[scratchpads.chat]
+animation = "fromRight"
+command = "kitty --class ollama ollama run llama2:7b"
+#command = "/home/damaru/.config/hypr/scripts/perplexity"
+class = "ollama"
+size = "40% 80%"
+margin = 50
+
+[_scratchpads.trl]
+animation = "fromRight"
+#command = "kitty --class ollama ollama run phi3:14b"
+command = "/home/damaru/.config/hypr/scripts/trl"
+class = "trl"
+size = "40% 80%"
+margin = 50
+
+[scratchpads.thunar]
+animation = "fromRight"
+#command = "kitty --class ollama ollama run phi3:14b"
+command = "thunar"
+class = "thunar"
+size = "40% 80%"
+margin = 50
+unfocus = "hide"
+
+[scratchpads.calc]
+animation = "fromRight"
+command = "gnome-calculator"
+class = "org.gnome.Calculator"
+size = "20% 50%"
+margin = 50
+unfocus = "hide"
+
+
+[_scratchpads.twitter]
+animation = "fromRight"
+#command = "kitty --class ollama ollama run phi3:14b"
+command = "/home/damaru/.config/hypr/scripts/twitter"
+class = "twitter"
+size = "40% 80%"
+margin = 50
+unfocus = "hide"

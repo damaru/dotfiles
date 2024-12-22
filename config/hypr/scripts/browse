@@ -1,0 +1,139 @@
+#!/usr/bin/python3
+
+import gi
+import os
+import webbrowser
+import sys
+
+
+# Seems like it's needed to be able to run webkit with compositor
+os.environ["WEBKIT_DISABLE_DMABUF_RENDERER"] = "1"
+
+gi.require_version('Gtk', '3.0')
+gi.require_version('WebKit2', '4.1')
+
+
+from gi.repository import Gtk, Gdk, WebKit2
+from pathlib import Path
+
+def url2class(url):
+    #get the domain name
+    return url.replace('https://', '').replace('http://', '').replace('www.', '').replace('/', '-').replace('.', '-').replace('-', '')
+
+
+# Url for the webapp to load
+url = 'https://www.perplexity.ai/'
+
+if sys.argv[1:]:
+    url = sys.argv[1]
+
+title = url2class(url)
+print(title)
+
+# Window initial size
+win_width = 1024
+win_height = 768
+
+# CSS entries to use for GTK
+css = """
+    window {
+        background-color: #ffFFFF;
+    }
+    """
+
+# CSS to append to the loaded website so you can adjust the websites' look
+css_webview = """
+    html body,
+    html .mw-page-container {
+        background: #FFFFFF;
+    }
+    """
+
+# We load all links that are opened in new windows using the default browser
+def create(view, action):
+    uri = action.get_request().get_uri()
+    webbrowser.open(uri, new=0, autoraise=True)
+
+# On load we reveal the webview so loading doesn't just show a black window
+def load(view, load_event):
+    if (load_event == 3 and not revealer.get_reveal_child()):
+        loading.stop()
+        loading.set_visible(False)
+        revealer.set_reveal_child(True)
+
+# When navigation we check if the target url contains the main url and if not we redirect links to the default browser instead
+def navigate(view, decision, decision_type):
+    return;
+    if (decision_type == 0):
+        uri = decision.get_navigation_action().get_request().get_uri()
+        if (uri.find(url) == -1 and uri != 'about:blank'):
+            webbrowser.open(uri, new=0, autoraise=True)
+            decision.ignore()
+
+home = Path.home()
+#window = Gtk.Window()
+
+class MyApplication(Gtk.Application):
+    def __init__(self, title):
+        super().__init__(application_id=title)
+
+    def do_activate(self):
+        win = Gtk.ApplicationWindow(application=self)
+        win.set_title(title)
+        win.set_default_size(400, 300)
+        #win.show()
+        return win
+
+app = MyApplication(title)
+window = app.do_activate()
+
+revealer = Gtk.Revealer()
+
+# Uncomment in case you want to use GTK dark theme variant
+settings = Gtk.Settings.get_default()
+settings.set_property("gtk-application-prefer-dark-theme", True)
+window.set_title(title)
+window.resize(win_width, win_height)
+window.connect('delete-event', Gtk.main_quit)
+
+css_provider = Gtk.CssProvider()
+css_provider.load_from_data(css.encode())
+context = Gtk.StyleContext()
+screen = Gdk.Screen.get_default()
+context.add_provider_for_screen(screen, css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+
+webview = WebKit2.WebView()
+webview.load_uri(url)
+webview.connect("create", create)
+webview.connect("load-changed", load)
+webview.connect("decide-policy", navigate)
+
+# Comment out if you want to have smooth scrolling activated
+webview.get_settings().set_enable_smooth_scrolling(False)
+
+# This forces cookies to be stored so session is kept alive
+webview.get_context().get_cookie_manager().set_persistent_storage(
+        home.as_posix() + '/.local/share/' + os.path.basename(__file__) + '/cookies', WebKit2.CookiePersistentStorage.SQLITE
+    )
+
+style = WebKit2.UserStyleSheet.new(css_webview, 0, 1, None, None)
+webview.get_user_content_manager().add_style_sheet(style)
+
+revealer.set_transition_type(1)
+revealer.add(webview)
+
+loading = Gtk.Spinner.new()
+loading.set_size_request(50, 50)
+loading.set_valign(Gtk.Align.END)
+loading.start()
+
+box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
+box.pack_start(loading, expand=True, fill=True, padding=0)
+box.pack_start(revealer, expand=True, fill=True, padding=0)
+
+window.add(box)
+window.show_all()
+
+#Gtk.main()
+
+app.run()
