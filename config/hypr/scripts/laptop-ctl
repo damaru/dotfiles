@@ -1,5 +1,47 @@
 #!/bin/bash
 
+SCRIPT_DIR=$(dirname $(realpath $0))
+ICONS_DIR="$SCRIPT_DIR/../icons"
+
+notify() {
+  icon=$ICONS_DIR/notification.svg
+  id=$1;
+  shift;
+  msg=$1;
+  shift;
+	notify-send -e -h string:x-canonical-private-synchronous:$id -u low -i "$icon" "${id}: ${msg} $*"
+}
+
+# title icon message
+rofi-prompt() {
+  if [ "$1" == "" ]; then
+    echo "Usage: list | prompt <title> <icon> <prompt>"
+    exit 1
+  fi
+
+  columns=$1
+  shift
+  lines=$1
+  shift
+  title=$1
+  shift
+  icon=$1
+  shift
+  message="$@"
+
+	rofi \
+		-dmenu \
+    -theme-str "listview {columns: $columns; lines: $lines;}" \
+		-theme-str "textbox-prompt-colon {str: \"$icon\";}" \
+		-p "$title" \
+		-mesg "$message" \
+		-markup-rows \
+		-theme $HOME/.config/rofi/powermenu/type-1/style-1.rasi
+}
+
+prompt() {
+  rofi-prompt 1 4 "$@"
+}
 
 ################################################################################
 # Touchpad Control
@@ -10,7 +52,8 @@
 # use hyprctl devices to get your system touchpad device name
 # source https://github.com/hyprwm/Hyprland/discussions/4283?sort=new#discussioncomment-8648109
 
-notif="$HOME/.config/swaync/images/bell.png"
+#notif="$HOME/.config/swaync/images/bell.png"
+notif=$ICONS_DIR/notification.svg
 
 export TOUCHPAD_STATUS_FILE="$XDG_RUNTIME_DIR/touchpad.status"
 
@@ -113,7 +156,7 @@ notify-user() {
     if [[ "$(get-volume)" == "Muted" ]]; then
         notify-send -e -h string:x-canonical-private-synchronous:volume_notif -u low " Muted"
     else
-        notify-send -e -h int:value:"$(get-volume | sed 's/%//')" -h string:x-canonical-private-synchronous:volume_notif -u low " Volume: $(get_volume)"
+        notify-send -e -h int:value:"$(get-volume | sed 's/%//')" -h string:x-canonical-private-synchronous:volume_notif -u low " Volume: $(get-volume)"
         sound --volume
     fi
 }
@@ -319,5 +362,82 @@ case "$1" in
     ;;
 esac
 }
+
+wifi-list(){
+  nmcli --fields "SECURITY,SSID" device wifi list | sed 1d | sed 's/  */ /g' | sed -E "s/WPA*.?\S/ /g" | sed "s/^--/ /g" | sed "s/  //g" | sed "/--/d"
+}
+
+wifi-select() {
+list=$(wifi-list)
+
+current_network=$(nmcli -t -f active,ssid dev wifi | grep '^yes' | cut -d':' -f2)
+connected=$(nmcli -fields WIFI g)
+if [[ "$connected" =~ "enabled" ]]; then
+	toggle="󰖪  Disable Wi-Fi"
+elif [[ "$connected" =~ "disabled" ]]; then
+	toggle="󰖩  Enable Wi-Fi"
+fi
+chosen_network=$(echo -e "$toggle\n$list" | prompt "Wi-Fi: Select SSID (${current_network})" " 󰖩 " "Available Networks:")
+echo $chosen_network
+}
+
+wifi-connect() {
+# Depnds on nmcli
+if [ "$1" == "" ]; then
+  notify "Wi-Fi" "Scanning.."
+  chosen_network=$(wifi-select)
+  echo $chosen_network
+  read -r chosen_id <<< "${chosen_network:2}"
+
+  if [ "$chosen_network" = "" ]; then
+    exit
+  elif [ "$chosen_id" = "Enable Wi-Fi" ]; then
+    nmcli radio wifi on
+    notify "Wi-Fi" "Enabled"
+  elif [ "$chosen_id" = "Disable Wi-Fi" ]; then
+    nmcli radio wifi off
+    notify "Wi-Fi" "Disabled"
+  else
+    # Message to show when connection is activated successfully
+    success_message="Connected to the Wi-Fi network \"$chosen_id\"."
+    # Get saved connections
+    saved_connections=$(nmcli -g NAME connection)
+    notify "Wi-Fi" "Connecting: $chosen_id"
+    if [[ $(echo "$saved_connections" | grep -w "$chosen_id") = "$chosen_id" ]]; then
+      nmcli connection up id "$chosen_id" | grep "successfully" \
+        && notify "Wi-Fi" "Connected: $chosen_id"
+    else
+      if [[ "$chosen_network" =~ "" ]]; then
+        wifi_password=$(rofi -theme ${dir}/${theme}.rasi -dmenu -p "Password: " )
+      fi
+      nmcli device wifi connect "$chosen_id" password "$wifi_password" \
+        | grep "successfully" \
+        && notify "Wi-Fi" "Connected: $chosen_id"
+    fi
+  fi
+else
+  nmcli device wifi connect "$1"
+  fi
+}
+
+game-mode() {
+HYPRGAMEMODE=$(hyprctl getoption animations:enabled | awk 'NR==1{print $2}')
+if [ "$HYPRGAMEMODE" = "1" ] ; then
+  hyprctl --batch "\
+    keyword animations:enabled 0;\
+    keyword decoration:blur:passes 0;\
+    keyword general:gaps_in 0;\
+    keyword general:gaps_out 0;\
+    keyword general:border_size 1;\
+    keyword decoration:rounding 0"
+      notify "GameMode" "On"
+      exit
+    else
+      hyprctl reload
+      notify "GameMode" "Off"
+      exit
+fi
+}
+
 
 $@

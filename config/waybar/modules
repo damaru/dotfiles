@@ -1,167 +1,6 @@
-//* ---- 💫 https://github.com/JaKooLit 💫 ---- *//
 
 {
-// HYPRLAND WORKSPACES. CHOOSE as desired and place on waybar configs
-// CIRCLES Style
-"hyprland/workspaces": {
-	"active-only": false,
-    "all-outputs": true, 
-    "format": "{icon}",
-    "show-special": false,
-    "on-click": "activate",
-    "on-scroll-up": "hyprctl dispatch workspace e+1",
-    "on-scroll-down": "hyprctl dispatch workspace e-1",
-    "persistent-workspaces": {
-      "1": [],
-      "2": [],
-      "3": [],
-      "4": [],
-      "5": [],
-    },
-    "format-icons": {
-      "active": "",
-      "default": "",
-	},  
-},
 
-// ROMAN Numerals style
-"hyprland/workspaces#roman": {
-    "active-only":false,
-    "all-outputs": true,
-    "format": "{icon}",
-    "show-special": false,
-    "on-click": "activate",
-    "on-scroll-up": "hyprctl dispatch workspace e+1",
-    "on-scroll-down": "hyprctl dispatch workspace e-1",
-    "persistent-workspaces":{
-        "1": [],
-        "2": [],
-        "3": [],
-        "4": [],
-        "5": [],
-    },
-    "format-icons": {
-      "1": "I",
-      "2": "II",
-      "3": "III",
-      "4": "IV",
-      "5": "V",
-      "6": "VI",
-      "7": "VII",
-      "8": "VIII",
-      "9": "IX",
-      "10": "X",
-      
-    },
-},
-
-// PACMAN Style
-  "hyprland/workspaces#pacman": {
-    "active-only":false,
-    "all-outputs": true,
-    "format": "{icon}",
-    "on-click": "activate",
-    "on-scroll-up": "hyprctl dispatch workspace e+1",
-    "on-scroll-down": "hyprctl dispatch workspace e-1",
-    "show-special": false,
-    "persistent-workspaces":{
-        "1": [],
-        "2": [],
-        "3": [],
-        "4": [],
-        "5": [],
-    },
-    "format": "{icon}",
-    "format-icons": {
-      "active": " 󰮯 ",
-      "default": "󰊠",
-      "persistent":"󰊠",
-    },
-},
-  
-"hyprland/workspaces#kanji": {
-    "disable-scroll": true,
-    "all-outputs": true,
-    "format": "{icon}",
-    "persistent-workspaces": {
-      "1": [],
-      "2": [],
-      "3": [],
-      "4": [],
-      "5": [],
-      },
-    "format-icons": {
-      "1": "一",
-      "2": "二",
-      "3": "三",
-      "4": "四",
-      "5": "五",
-      "6": "六",
-      "7": "七",
-      "8": "八",
-      "9": "九",
-      "10": "十",
-    }
-},
-  
-//  NUMBERS and ICONS style
-"hyprland/workspaces#4": {
-    "format": "{name}",
-    "format": " {name} {icon} ",
-    //"format": " {icon} ",
-    "show-special": false,
-    "on-click": "activate",
-    "on-scroll-up": "hyprctl dispatch workspace e+1",
-    "on-scroll-down": "hyprctl dispatch workspace e-1",
-    "all-outputs": true,
-    "sort-by-number": true,
-    "format-icons": {
-      "1": " ",
-      "2": " ",
-      "3": " ",
-      "4": " ",
-      "5": " ",
-      "6": " ",
-      "7": "",
-      "8": " ",
-      "9": "",
-      "10": "10",
-      "focused": "",
-      "default": "",
-    },
-},
- 
-// GROUP
-  
-"group/motherboard": {
-    "orientation": "horizontal",
-    "modules": [
-      "cpu",
-      "memory",
-      "temperature",
-      "disk",
-      ]	
-},
-  
-"group/laptop": {
-    "orientation": "horizontal",
-    "modules": [
-	    "cpu",
-	    "memory",
-      "disk",
-    "backlight",
-    "battery",
-    ]	
-},
-  
-"group/audio": {
-    "orientation": "horizontal",
-    "modules": [
-      "pulseaudio",
-      "pulseaudio#microphone",
-      ]	
-},
- 
 "backlight": {
     "interval": 2,
     "align": 0,
@@ -176,8 +15,8 @@
     "on-click-middle": "",
     "on-click-right": "",
     "on-update": "",
-    "on-scroll-up": "~/.config/hypr/scripts/Brightness.sh --inc",
-    "on-scroll-down": "~/.config/hypr/scripts/Brightness.sh --dec",
+    "on-scroll-up": "~/.config/hypr/scripts/laptop-ctl brightness --inc",
+    "on-scroll-down": "~/.config/hypr/scripts/laptop-ctl brightness --dec",
     "smooth-scrolling-threshold": 1,
 },
       
@@ -197,15 +36,13 @@
     "format": "{icon} {capacity}%",
     "format-charging": "{capacity}%",
     "format-plugged": "󱘖 {capacity}%",
-	"format-alt-click": "click",
+	  "format-alt-click": "click",
     "format-full": "{icon} Full",
     "format-alt": "{icon} {time}",
     "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
     "format-time": "{H}h {M}min",
     "tooltip": true,
     "tooltip-format": "{timeTo} {power}w",
-  //  "on-click-middle": "~/.config/hypr/scripts/ChangeBlur.sh",
-  //  "on-click-right": "~/.config/hypr/scripts/Wlogout.sh",
 },
       
 "bluetooth": {
@@ -222,7 +59,7 @@
 "clock": {
     "interval": 1,
     //"format": " {:%I:%M %p}", // AM PM format
-    "format": " {:%I:%M %p %Z}",
+    "format": " {:%I:%M %p %Z}", //  %d %b %Y
     //"format": " {:%H:%M:%S}",
     "format-alt": " {:%H:%M   %Y, %d %B, %A}",
     "tooltip-format": "<tt><small>{calendar}</small></tt>",
@@ -256,11 +93,21 @@
     "format-icons": ["▁", "▂", "▃", "▄", "▅", "▆", "▇", "█"],
     "on-click-right": "gnome-system-monitor",
 },
-    
-"disk": {
-    "interval": 30,
+     
+"disk#root": {
+    "interval": 60,
     //"format": "󰋊",
     "path": "/",
+    //"format-alt-click": "click",
+    "format": "󰋊 {percentage_used}%",
+    //"tooltip": true,
+    "tooltip-format": "{used} used out of {total} on {path} ({percentage_used}%)",
+},
+
+"disk#home": {
+    "interval": 60,
+    //"format": "󰋊",
+    "path": "/home",
     //"format-alt-click": "click",
     "format": "󰋊 {percentage_used}%",
     //"tooltip": true,
@@ -299,25 +146,25 @@
 },
   
 "idle_inhibitor": {
-    "format": " {icon}",
+    "format": "{icon}",
     "format-icons": {
-      "activated": " ",
+      "activated": " ",
       "deactivated": " ",
     }
 },
     
-"keyboard-state": {
+  "keyboard-state": {
     //"numlock": true,
     "capslock": true,
     "format": {
       "numlock": "N {icon}",
-    "capslock":"󰪛 {icon}",
-        }, 
+      "capslock":"󰪛 {icon}",
+    }, 
     "format-icons": {
       "locked": "",
       "unlocked": ""
-              },
-},
+    },
+  },
     
 "memory": {
     "interval": 10,
@@ -360,13 +207,13 @@
 },
       
 "network": {
-    "format": "{ifname}",
+    "format": "{icon}",
     "format-wifi": "{icon}",
     "format-ethernet": "󰌘",
     "format-disconnected": "󰌙", 
     "tooltip-format": "{ipaddr}  {bandwidthUpBytes}  {bandwidthDownBytes}",
     "format-linked": "󰈁 {ifname} (No IP)",
-    "tooltip-format-wifi": "{essid} {icon} {signalStrength}%",
+    "tooltip-format-wifi": "{essid} {icon} {signalStrength}% {ipaddr}  {bandwidthUpBytes}  {bandwidthDownBytes}",
     "tooltip-format-ethernet": "{ifname} 󰌘",
     "tooltip-format-disconnected": "󰌙 Disconnected",
     "max-length": 50,
@@ -404,10 +251,10 @@
     },
     "scroll-step": 1.0,
     "on-click-middle": "/home/damaru/bin/arotate",
-    "on-click": "~/.config/hypr/scripts/Volume.sh --toggle",
+    "on-click": "~/.config/hypr/scripts/laptop-ctl volume  --toggle",
     "on-click-right": "pavucontrol -t 3",
-    "on-scroll-up": "~/.config/hypr/scripts/Volume.sh --inc",
-    "on-scroll-down": "~/.config/hypr/scripts/Volume.sh --dec",
+    "on-scroll-up": "~/.config/hypr/scripts/laptop-ctl volume --inc",
+    "on-scroll-down": "~/.config/hypr/scripts/laptop-ctl volume --dec",
 	"tooltip-format": "{icon} {desc} | {volume}%",
     "smooth-scrolling-threshold": 1,
 },
@@ -416,10 +263,10 @@
     "format": "{format_source}",
     "format-source": " {volume}%",
     "format-source-muted": "",
-    "on-click": "~/.config/hypr/scripts/Volume.sh --toggle-mic",
+    "on-click": "~/.config/hypr/scripts/laptop-ctl volume --toggle-mic",
     "on-click-right": "pavucontrol -t 4",
-    "on-scroll-up": "~/.config/hypr/scripts/Volume.sh --mic-inc",
-    "on-scroll-down": "~/.config/hypr/scripts/Volume.sh --mic-dec",
+    "on-scroll-up": "~/.config/hypr/scripts/laptop-ctl volume --mic-inc",
+    "on-scroll-down": "~/.config/hypr/scripts/laptop-ctl volume --mic-dec",
 	"tooltip-format": "{source_desc} | {source_volume}%",
     "scroll-step": 5,
 },
@@ -458,30 +305,9 @@
     "tooltip-format": "{title}",
     "on-click": "activate",
     "on-click-middle": "close",
-    "ignore-list": [
-          "wofi",
-          "rofi",  
-                   ]
+    "ignore-list": [ "wofi", "rofi", ]
 },
       
-"custom/cycle_wall":{
-    "format":" ",
-    "exec": "echo ; echo 󰸉 wallpaper select",
-    "on-click": "~/.config/hypr/scripts/WallpaperSelect.sh",
-    "on-click-right": "~/.config/hypr/scripts/Wallpaper.sh",
-    "on-click-middle": "~/.config/hypr/scripts/WaybarStyles.sh",
-    "interval" : 86400, // once every day
-    "tooltip": true,
-},
-      
-"custom/keybinds": {
-    "format": "  ",
-    "exec": "echo ; echo  Key Hints SUPER H",
-    "on-click": "~/.config/hypr/scripts/KeyHints.sh",
-    "interval" : 86400, // once every day
-    "tooltip": true,
-},
-
 "custom/keyboard": {
     "exec": "cat ~/.cache/kb_layout",
     "interval": 1,
@@ -489,23 +315,6 @@
     "on-click": "~/.config/hypr/scripts/SwitchKeyboardLayout.sh",
     },
     
-"custom/light_dark": {
-    "format": "{}",
-    "exec": "echo ; echo 󰔎 Dark-Light switcher",
-    "on-click": "~/.config/hypr/scripts/DarkLight.sh",
-    "on-click-right": "~/.config/hypr/scripts/WaybarStyles.sh",
-    "on-click-middle": "~/.config/hypr/scripts/Wallpaper.sh",
-    "interval" : 86400, // once every day
-    "tooltip": true
-},
-      
-"custom/lock": {
-    "format": "󰌾{}",
-    "exec": "echo ; echo 󰷛  screen lock",
-    "interval" : 86400, // once every day
-    "tooltip": true,
-    "on-click": "~/.config/hypr/scripts/LockScreen.sh",
-},
     
 "custom/menu": {
     "format": " 󱓟 {}",
@@ -513,8 +322,6 @@
     "interval" : 86400, // once every day
     "tooltip": true,
     "on-click": "pkill rofi || rofi -show drun -modi drun,filebrowser,run -show-icons -theme $HOME/.config/rofi/launchers/type-1/style-1.rasi",
-    "on-click-middle": "~/.config/hypr/scripts/WallpaperSelect.sh",
-    "on-click-right": "~/.config/hypr/scripts/WaybarLayout.sh",
 },
 
 // This is a custom cava visualizer
@@ -537,9 +344,9 @@
     "smooth-scrolling-threshold": 1,
 },
 
-"custom/power": {
+"custom/powermenu": {
     "format": "⏻ ",
-    "exec": "echo ; echo 󰟡 power // blur",
+    //"exec": "echo ; echo 󰟡 power // blur",
   	"on-click-old": "rofi -theme ~/.config/rofi/launchers/type-2/style-1.rasi -show powermenu -modi powermenu:~/bin/powermenu",
   	"on-click": "~/.config/rofi/scripts/powermenu_t1",
     "interval" : 86400, // once every day
@@ -734,30 +541,8 @@
     "on-click-right": "kitty --title nvtop sh -c 'nvtop'"
 },
     
-  "custom/close": {
-    "format": "",
-    "tooltip": false,
-	"tooltip-format": "close",
-    "on-click": "hyprctl dispatch killactive",
-  },
-  
-  "custom/fullscreen": {
-    "format": "",
-    "tooltip": false,
-	"tooltip-format": "float",
-    "on-click": "hyprctl dispatch fullscreen",
-  },
-
-
-  "custom/float": {
-    "format": "⊖ ",
-    "tooltip": false,
-	"tooltip-format": "float",
-    "on-click": "hyprctl dispatch togglefloating",
-  },
-
 //  NUMBERS and ICONS style
-"hyprland/workspaces#custom": {
+"hyprland/workspaces": {
     "format": "{icon}",
     "show-special": false,
     "on-click": "activate",
@@ -806,6 +591,137 @@
     "power-saver": "<span color='#affaa3'></span>"
   }
 },
+
+"group/group-stats": {
+    "orientation": "inherit",
+    "drawer": {
+        "transition-duration": 100,
+        "children-class": "group-expand",
+        "transition-left-to-right": false,
+    },
+    "modules": [
+      "battery",
+      "cpu",
+      "memory",
+      "disk#root",
+      "disk#home",
+      "backlight",
+	    "power-profiles-daemon",
+    ],
+},
+
+"group/group-settings": {
+    "orientation": "inherit",
+    "drawer": {
+        "transition-duration": 100,
+        "children-class": "group-expand",
+        "transition-left-to-right": false,
+    },
+    "modules": [
+      "pulseaudio",
+      "pulseaudio#microphone",
+    ],
+},
+
+"group/group-window": {
+    "orientation": "inherit",
+    "drawer": {
+        "transition-duration": 100,
+        "children-class": "group-expand",
+        "transition-left-to-right": false,
+    },
+    "modules": [
+    "custom/close",	
+    "custom/fullscreen",
+    "custom/float",
+    ],
+},
+
+  "custom/close": {
+    "format": " ",
+    "tooltip": false,
+	  "tooltip-format": "close",
+    "on-click": "hyprctl dispatch killactive",
+  },
+  
+  "custom/fullscreen": {
+    "format": " ",
+    "tooltip": false,
+	  "tooltip-format": "fullscreen",
+    "on-click": "hyprctl dispatch fullscreen",
+  },
+
+
+  "custom/float": {
+    "format": "  ",
+    "tooltip": false,
+  	"tooltip-format": "float",
+    "on-click": "hyprctl dispatch togglefloating",
+  },
+
+"group/network": {
+    "orientation": "inherit",
+    "drawer": {
+        "transition-duration": 100,
+        "children-class": "group-expand",
+        "transition-left-to-right": false,
+    },
+    "modules": [
+        "network", // First element is the "group leader" and won't ever be hidden
+        "bluetooth", // First element is the "group leader" and won't ever be hidden
+        "network#speed",
+    ]
+},
+
+"group/notification": {
+    "orientation": "inherit",
+    "drawer": {
+        "transition-duration": 100,
+        "children-class": "group-expand",
+        "transition-left-to-right": false,
+    },
+    "modules": [
+        "custom/swaync",
+	      "tray",
+    ]
+},
+
+"group/group-power": {
+    "orientation": "inherit",
+    "drawer": {
+        "transition-duration": 100,
+        "children-class": "group-expand",
+        "transition-left-to-right": false,
+    },
+    "modules": [
+        "custom/power", // First element is the "group leader" and won't ever be hidden
+        "custom/quit",
+        "custom/lock",
+        "custom/reboot",
+    ]
+},
+
+"custom/quit": {
+    "format": "󰗼 ",
+    "tooltip": false,
+    "on-click": "hyprctl dispatch exit"
+},
+"custom/lock": {
+    "format": "󰍁 ",
+    "tooltip": false,
+    "on-click": "swaylock"
+},
+"custom/reboot": {
+    "format": "󰜉 ",
+    "tooltip": false,
+    "on-click": "reboot"
+},
+"custom/power": {
+    "format": "⏻",
+    "tooltip": false,
+    "on-click": "shutdown now"
+}
+
  
 }
   

@@ -2,16 +2,16 @@
 {
 "include": "~/.config/waybar/modules",
 "layer": "top",
-//"mode": "dock",
+"mode": "dock",
 "exclusive": true,
 "passthrough": false,
 "position": "top",
 "spacing": 3,
-"fixed-center": true,
+//"fixed-center": true,
 "ipc": true,
 "margin-top": 0,
-"margin-left": 8,
-"margin-right": 8,
+"margin-left": 0,
+"margin-right": 0,
 
 "modules-left": [
 	//"custom/float",	
@@ -25,43 +25,30 @@
 	//"custom/separator#dot-line", 
 	//"custom/cava_mviz",
 	"custom/menu",
-	"custom/separator#dot-line",
 	"hyprland/window", 
 ],
 
+
 "modules-center": [
-	"custom/separator#dot-line",
-  "hyprland/workspaces#custom",
-	"custom/swaync",
-	"custom/separator#dot-line",
-], 
+  "hyprland/workspaces",
+],
 
 "modules-right": [
 	"custom/separator#dot-line",
-	"tray",
 	"custom/recorder",
-	"power-profiles-daemon",
-	//"bluetooth",
-	//"custom/keybinds",	
-	//"custom/cycle_wall",	
-	//"custom/lock",
-	//"custom/light_dark",
-	//"idle_inhibitor", 
-	//"network#speed",
-	//"wireplumber", 
-
-
-	"group/audio",
-	"group/laptop",
-	"clock",
+	"idle_inhibitor", 
+  "custom/separator#dot-line",
 	"hyprland/submap",
-	"keyboard-state",
+	"group/notification",
+	"group/group-stats",
+	"network",
+	"group/group-settings",
   "custom/separator#dot-line",
-	"custom/float",
-	"custom/fullscreen",
-	"custom/close",	
+	"clock",
   "custom/separator#dot-line",
-	"custom/power"
+	"custom/powermenu",
+  "custom/separator#dot-line",
+	"group/group-window",
 	],
 
 "wlr/workspaces": { 
