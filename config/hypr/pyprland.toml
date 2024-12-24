@@ -1,35 +1,24 @@
 [pyprland]
 plugins = [
-    "expose",
-    "shift_monitors",
     "fetch_client_menu",
     "layout_center",
     "lost_windows",
     "magnify",
-     "scratchpads",
+    "scratchpads",
     "workspaces_follow_focus"
 ]
 
-[_scratchpads.term]
-animation = "fromTop"
-command = "kitty --class kitty-dropterm"
-class = "kitty-dropterm"
-size = "75% 60%"
-max_size = "1920px 100%"
-margin = 50
-
 [scratchpads.skype]
 animation = "fromRight"
-command = "/home/damaru/bin/skype-wl"
 class = "Skype"
+command = "skypeforlinux"
 size = "40% 80%"
 margin = 50
 
 [scratchpads.chat]
 animation = "fromRight"
-command = "kitty --class ollama ollama run llama2:7b"
-#command = "/home/damaru/.config/hypr/scripts/perplexity"
-class = "ollama"
+command = "/home/damaru/.config/hypr/scripts/perplexity"
+class = "perplexity"
 size = "40% 80%"
 margin = 50
 
@@ -50,7 +39,7 @@ size = "40% 80%"
 margin = 50
 unfocus = "hide"
 
-[scratchpads.calc]
+[_scratchpads.calc]
 animation = "fromRight"
 command = "gnome-calculator"
 class = "org.gnome.Calculator"

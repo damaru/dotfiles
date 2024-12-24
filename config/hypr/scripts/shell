@@ -1,0 +1,22 @@
+#!/bin/bash -l
+export LD_LIBRARY_PATH=/usr/local/lib
+unset STY
+cprj()
+{
+
+	if [ -z "$1" ]; then
+		PR=`cat ~/.project`; 
+	else
+		PR=$1
+	fi
+	cd $PR
+	if [ -f env.sh ]; then
+		. env.sh
+	fi
+}
+
+
+cprj
+
+(hyprctl clients | grep class | grep tmux ) && hyprctl dispatch focuswindow class:tmux && exit
+exec kitty --class tmux tmux new-session -AD -s tmux #-c "bash -l"'

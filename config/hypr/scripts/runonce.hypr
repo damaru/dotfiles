@@ -1,0 +1,4 @@
+#!/bin/sh
+(hyprctl clients | grep class | grep $1 ) && hyprctl dispatch focuswindow class:$1 && exit
+shift
+exec $*

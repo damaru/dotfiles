@@ -1,0 +1,13 @@
+#!/bin/sh
+
+(hyprctl clients | grep class | grep - firefox ) && (hyprctl dispatch focuswindow class:firefox && exit 0)
+exec firefox $*
+
+message " OPEN $*"
+if [ -z "$*" ]; then
+exec runonce -s "firefox" -e "" -c firefox
+else
+exec runonce -s "firefox $*" -e "firefox --target tab $*" -c firefox
+fi
+
+

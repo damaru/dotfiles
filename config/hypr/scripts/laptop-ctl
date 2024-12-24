@@ -381,6 +381,7 @@ chosen_network=$(echo -e "$toggle\n$list" | prompt "Wi-Fi: Select SSID (${curren
 echo $chosen_network
 }
 
+
 wifi-connect() {
 # Depnds on nmcli
 if [ "$1" == "" ]; then
@@ -439,5 +440,16 @@ if [ "$HYPRGAMEMODE" = "1" ] ; then
 fi
 }
 
+run-once(){
+  (hyprctl clients | grep class | grep $1 ) && hyprctl dispatch focuswindow class:$1 && exit
+  echo window not found $*
+  exec $* &
+}
 
-$@
+count(){
+  echo $#
+}
+
+CMD=$1
+shift
+$CMD "$@"
