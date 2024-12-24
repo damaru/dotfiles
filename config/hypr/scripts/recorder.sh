@@ -27,9 +27,9 @@ fi
 echo "$STATUS" > /tmp/record-screen-status
 
 if [ "$STATUS" == "idle" ]; then
-    TEXT="<span color=\\\"#255F25\\\">   </span>"
+    TEXT="   "
 else
-    TEXT="<span color=\\\"#FF9999\\\"  background=\\\"#FF0000\\\">   </span>"
+    TEXT="<span color=\\\"#FF9999\\\"> </span>"
 fi
 
 echo "{\"text\": \"${TEXT}\"}"

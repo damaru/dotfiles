@@ -87,6 +87,7 @@
    
 "cpu": {
     "format": "󰍛 {usage}%",  
+    "max-length": 40,
     "interval": 1,
     "format-alt-click": "click",
     "format-alt": "󰍛 {icon0}{icon1}{icon2}{icon3} {usage:>2}%",
@@ -217,6 +218,7 @@
     "tooltip-format-ethernet": "{ifname} 󰌘",
     "tooltip-format-disconnected": "󰌙 Disconnected",
     "max-length": 50,
+    "on-click": "/home/damaru/.config/hypr/scripts/laptop-ctl wifi-connect",
     "format-icons": ["󰤯","󰤟","󰤢","󰤥","󰤨"]
 },
   
@@ -600,6 +602,7 @@
         "transition-left-to-right": false,
     },
     "modules": [
+	    "tray",
       "battery",
       "cpu",
       "memory",
@@ -607,6 +610,27 @@
       "disk#home",
       "backlight",
 	    "power-profiles-daemon",
+      "backlight",
+    ],
+},
+
+"group/group-laptop": {
+    "orientation": "inherit",
+    "modules": [
+      "custom/swaync",
+	    "group/stats"
+    ]
+},
+
+"group/group-desktop": {
+    "orientation": "inherit",
+    "modules": [
+      "custom/swaync",
+	    "tray",
+      "cpu",
+      "memory",
+      "disk#root",
+      "disk#home",
     ],
 },
 

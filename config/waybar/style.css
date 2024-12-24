@@ -6,9 +6,9 @@ font-family: "JetBrainsMono Nerd Font";
 font-weight: bold;
 min-height: 0;
 /* set font-size to 100% if font scaling is set to 1.00 using nwg-look */
-font-size: 97%;
+font-size: 14px;
 font-feature-settings: '"zero", "ss01", "ss02", "ss03", "ss04", "ss05", "cv31"';
-/*padding: 1px;*/
+padding: 1px;
 }
 
 /*
@@ -63,7 +63,9 @@ window#waybar {
   border-radius: 2px;
   color: #504030;
   /*background-color: transparent;*/
-  padding: 0px;
+  padding: 2px;
+  min-height: 40px;
+  font-size: 14px;
   /*background-color: shade(@base, 0.9);*/
 }
 
@@ -87,7 +89,7 @@ window#waybar.hidden {
 	border-radius: 1px;
   background: none;
   opacity: 1.0;
-  color: #89609a;
+  color: @yellow;
 } 
 
 #backlight,
@@ -138,6 +140,7 @@ window#waybar.hidden {
 	padding-bottom: 3px;*/
 	padding-right: 6px;
 	padding-left: 6px;
+  min-width: 20px;
 }
 
 @keyframes blink {
