@@ -602,13 +602,12 @@
         "transition-left-to-right": false,
     },
     "modules": [
-	    "tray",
       "battery",
+	    "tray",
       "cpu",
       "memory",
       "disk#root",
       "disk#home",
-      "backlight",
 	    "power-profiles-daemon",
       "backlight",
     ],
@@ -618,7 +617,7 @@
     "orientation": "inherit",
     "modules": [
       "custom/swaync",
-	    "group/stats"
+	    "group/group-stats"
     ]
 },
 
