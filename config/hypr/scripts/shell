@@ -18,5 +18,53 @@ cprj()
 
 cprj
 
-(hyprctl clients | grep class | grep tmux ) && hyprctl dispatch focuswindow class:tmux && exit
-exec kitty --class tmux tmux new-session -AD -s tmux #-c "bash -l"'
+(hyprctl clients | grep class | grep tmux ) && hyprctl dispatch focuswindow tmux && exit
+exec ghostty --class=tmux -e tmux new-session -AD -s tmux
+#exec ghostty --class=tmux -e tmux new-session -AD -s tmux #-c "bash -l"'
+#exec kitty --class tmux tmux new-session -AD -s tmux #-c "bash -l"'
+#exec kitty  tmux new-session -AD -s tmux #-c "bash -l"'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#SCMD='kitty --class screen screen -Rd'
+#CCMD='kitty --class screen screen -Rd'
+#SHELL=/usr/bin/fish
+
+SCMD='kitty --class screen tmux new-session -AD -s screen #-c "bash -l"'
+CCMD='kitty --class screen tmux new-session -AD -s screen #-c "bash -l"'
+
+(hyprctl clients | grep class | grep screen ) && hyprctl dispatch focuswindow screen && exit
+exec /usr/local/bin/runonce -c "screen" -s "$SCMD" "$CCMD"
+
+SCMD='/home/damaru/source/alacritty/target/release/alacritty --class screen  -e screen -Rd'
+CCMD='/home/damaru/source/alacritty/target/release/alacritty --class screen  -e screen -Rd'
+
+exec /usr/local/bin/runonce -c "screen" -s "$SCMD" "$CCMD"
+
+XTERM=gnome-terminal
+SCMD='gnome-terminal --class=screen -- screen -Rd '  
+CCMD='gnome-terminal --class=screen -- screen -Rd ' 
+
+
+exec /usr/local/bin/runonce -c "screen" -s "$SCMD" "$CCMD"
+xrdb -merge ~/.Xdefaults
+STERM=rxvt-unicode
+SCMD="$STERM"' -e screen -Rd' 
+CCMD="$STERM"' -e screen -Rd' 
+exec /usr/local/bin/runonce -c "kitty" -s "$SCMD" "$CCMD"
+XTERM=alacritty
+SCMD='alacritty -e screen -Rd'
+CCMD='alacritty -e screen -Rd'
+exec /usr/local/bin/runonce -c "$XTERM" -s "$SCMD" "$CCMD"

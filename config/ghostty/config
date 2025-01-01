@@ -1,0 +1,10 @@
+font-family = "JetBrains Mono"
+background = "#1E1E1E"
+copy-on-select = true
+background-opacity = 0.9
+background-blur-radius = 4
+fullscreen= false
+window-decoration = false
+copy-on-select = true
+clipboard-paste-protection = false
+
