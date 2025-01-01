@@ -625,6 +625,7 @@
     "orientation": "inherit",
     "modules": [
       "custom/swaync",
+      "bluetooth", // First element is the "group leader" and won't ever be hidden
 	    "tray",
       "cpu",
       "memory",
