@@ -34,8 +34,9 @@ if [ -z $ID ]; then
 else
   #message $WIN
   #echo "WINDOW:$ID"  | tee -a /tmp/shell.log
-hyprctl dispatch movetoworkspace $MON,$WIN
-hyprctl dispatch focuswindow $WIN
+  #hyprctl dispatch movetoworkspace $MON,$WIN
+  hyprctl dispatch focuswindow $WIN && exit
+  exec ghostty --class=com.mitchellh.ghostty.tmux -e tmux new-session -AD -s tmux
 fi
 
 exit

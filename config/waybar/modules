@@ -636,12 +636,14 @@
 
 "group/group-settings": {
     "orientation": "inherit",
-    "drawer": {
+    "#drawer": {
         "transition-duration": 100,
         "children-class": "group-expand",
         "transition-left-to-right": false,
     },
     "modules": [
+	    "network",
+	    "bluetooth",
       "pulseaudio",
       "pulseaudio#microphone",
     ],
