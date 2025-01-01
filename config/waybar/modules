@@ -616,18 +616,20 @@
 "group/group-laptop": {
     "orientation": "inherit",
     "modules": [
-      "custom/swaync",
 	    "group/group-stats"
     ]
 },
 
 "group/group-desktop": {
     "orientation": "inherit",
+    "drawer": {
+        "transition-duration": 100,
+        "children-class": "group-expand",
+        "transition-left-to-right": false,
+    },
     "modules": [
-      "custom/swaync",
-      "bluetooth", // First element is the "group leader" and won't ever be hidden
-	    "tray",
       "cpu",
+	    "tray",
       "memory",
       "disk#root",
       "disk#home",
@@ -642,6 +644,7 @@
         "transition-left-to-right": false,
     },
     "modules": [
+      "custom/swaync",
 	    "network",
 	    "bluetooth",
       "pulseaudio",
