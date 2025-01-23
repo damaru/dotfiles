@@ -22,8 +22,9 @@ vec3 hsv2rgb(vec3 c)
 
 void main() {
     vec4 pixColor = texture2D(tex, v_texcoord);
-    vec3 hsv = rgb2hsv(pixColor.rgb);
-    hsv.g *= 0.85;
-    hsv.b *= 0.9;
-    gl_FragColor = vec4(hsv2rgb(hsv), pixColor.a);
+    //vec3 hsv = rgb2hsv(pixColor.rgb);
+    //hsv.g *= 0.85;
+    //hsv.b *= 0.9;
+    //gl_FragColor = vec4(hsv2rgb(hsv), pixColor.a);
+    gl_FragColor = pixColor;
 }
