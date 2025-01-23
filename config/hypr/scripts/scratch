@@ -1,0 +1,51 @@
+#!/usr/bin/bash
+
+prop() {
+WINDOW=$(hyprctl clients | grep -e Window -e class | grep class:\ $1 -B1 | head -1 | awk '{print $2}')
+if [ "$WINDOW" == "" ]; then
+  echo ""
+  return -1
+fi
+echo $(hyprctl clients | grep -e $WINDOW -e $2 | grep $WINDOW -A1 | tail -1 | awk -F$2: '{print $2 $3}')
+}
+
+pull(){
+CLASS=$1
+WINDOW=address:0x$(hyprctl clients | grep -e Window -e class | grep class:\ $CLASS -B1 | head -1 | awk '{print $2}')
+echo $CLASS $WINDOW
+hyprctl keyword windowrule "unset,^(${CLASS})\$"
+echo hyprctl keyword windowrule "unset,^(${CLASS})\$"
+hyprctl dispatch resizewindowpixel "exact 1024 1152,$WINDOW"
+hyprctl dispatch moveworkspacetomonitor special:scratchpad DP-2 ; 
+hyprctl dispatch movetoworkspacesilent 2,$WINDOW
+hyprctl dispatch alterzorder top,$WINDOW
+hyprctl dispatch movewindowpixel "exact -1792 238,$WINDOW"
+hyprctl dispatch focuswindow $WINDOW
+hyprctl dispatch pin $WINDOW
+}
+
+push() {
+CLASS=$1
+WINDOW=address:0x$(hyprctl clients | grep -e Window -e class | grep class:\ $CLASS -B1 | head -1 | awk '{print $2}')
+echo $CLASS $WINDOW
+hyprctl dispatch movewindowpixel 0 801,$WINDOW
+hyprctl dispatch pin $WINDOW
+hyprctl dispatch movetoworkspacesilent special:scratchpad,$WINDOW
+}
+
+create() {
+ hyprctl clients
+ echo "[[BATCH]] keyword windowrule float,^($1)\$ ; keyword windowrule workspace special:scratchpad silent,^($1)\$ ; keyword windowrule move 1408 200%,^($1)\$ ; keyword windowrule size 1024 1152,^($1)\$"
+ hyprctl "[[BATCH]] keyword windowrule float,^($1)\$ ; keyword windowrule workspace special:scratchpad silent,^($1)\$ ; keyword windowrule move 1408 200%,^($1)\$ ; keyword windowrule size 1024 1152,^($1)\$"
+ sleep 2
+ /home/damaru/.config/hypr/scripts/$1 & 
+}
+
+toggle() {
+  ((prop $1 pid  && ((prop $1 workspace | grep scratchpad && pull $1) || push $1)) || (create $1 &)) 
+}
+
+
+CMD=$1
+shift
+$CMD "$@"

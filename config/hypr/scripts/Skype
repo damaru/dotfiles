@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+
+sleep 4
+exec /home/damaru/bin/skype-wl;

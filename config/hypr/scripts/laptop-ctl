@@ -450,6 +450,36 @@ count(){
   echo $#
 }
 
+
+current-monitor(){
+  hyprctl monitors| grep -e Monitor -e focused: | grep yes -B1 | head -1 | awk '{sub(/Monitor/,"");print $1}'
+}
+
+disable-monitor(){
+MONITOR=$1
+if [ "$MONITOR" = "" ]; then
+  MONITOR=$(hyprctl monitors| grep -e Monitor -e focused: | grep yes -B1 | head -1 | awk '{sub(/Monitor/,"");print $1}')
+fi
+hyprctl keyword monitor $MONITOR,disable
+}
+
+
+enable-monitor(){
+echo hyprctl keyword monitor $(grep monitor=$1 ~/.config/hypr/hyprland-$(hostname).conf|awk -F= '{print $2}')
+hyprctl keyword monitor $(grep monitor=$1 ~/.config/hypr/hyprland-$(hostname).conf|awk -F= '{print $2}')
+}
+
+toggle-monitor(){
+DISABLED=$(hyprctl monitors $1 | grep -e Monitor -e disabled | grep $1 -A1 | tail -1 | awk '{print $2}')
+if [ "$DISABLED" = "false" ] ; then
+  disable-monitor $1
+  notify "Monitor" "$1 Disabled"
+else
+  enable-monitor $1
+  notify "Monitor" "$1 Enabled"
+fi
+}
+
 CMD=$1
 shift
 $CMD "$@"
