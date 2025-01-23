@@ -3,11 +3,19 @@
 MONITORS=$(hyprctl monitors)
 CLIENTS=$(hyprctl clients)
 CURRENT_MONITOR=$(echo "$MONITORS" | grep -e Monitor -e focused:  | grep focused:\ yes -B1 | head -1| awk '{print $2}')
-CURRENT_WOKSPACE=$(echo "$MONITORS" | grep -e Monitor -e active\ workspace:  | grep $CURRENT_MONITOR -A1 | tail -1| awk '{print $3}')
+CURRENT_WORKSPACE=$(echo "$MONITORS" | grep -e Monitor -e active\ workspace:  | grep $CURRENT_MONITOR -A1 | tail -1| awk '{print $3}')
+
+if [ "$CURRENT_MONITOR" == "DP-2" ]; then
+XPOS=-1024
+YPOS=10%
+WIDTH=30%
+HEIGHT=80%
+else
 XPOS=55%
 YPOS=10%
 WIDTH=40%
 HEIGHT=80%
+fi
 
 prop() {
 WINDOW=$(echo "$CLIENTS" | grep -e Window -e class | grep class:\ $1 -B1 | head -1 | awk '{print $2}')
@@ -26,7 +34,7 @@ hyprctl --batch "<<<END
 keyword windowrule unset,^(${CLASS})\$;
 dispatch resizewindowpixel exact $WIDTH $HEIGHT,$WINDOW;
 dispatch moveworkspacetomonitor special:scratchpad $CURRENT_MONITOR;
-dispatch movetoworkspacesilent $CURRENT_WOKSPACE,$WINDOW;
+dispatch movetoworkspacesilent $CURRENT_WORKSPACE,$WINDOW;
 dispatch alterzorder top,$WINDOW;
 dispatch movewindowpixel exact $XPOS $YPOS,$WINDOW;
 dispatch focuswindow $WINDOW;
@@ -54,7 +62,7 @@ waitwin() {
 
 create() {
  hyprctl --batch "keyword windowrule float,^($1)\$ ; keyword windowrule workspace special:scratchpad silent,^($1)\$ ; keyword windowrule move 1408 200%,^($1)\$ ; keyword windowrule size 1024 1152,^($1)\$"
-if [ -f "~/.config/hypr/scripts/$1" ]; then
+if [ -f ~/.config/hypr/scripts/$1 ]; then
   echo "script found ~/.config/hypr/scripts/$1"
   ~/.config/hypr/scripts/$1
 else
@@ -69,7 +77,7 @@ toggle() {
 
 status(){
   echo "Monitor: $CURRENT_MONITOR"
-  echo "workspace: $CURRENT_WOKSPACE"
+  echo "workspace: $CURRENT_WORKSPACE"
 }
 
 com.damaru.ollama(){
