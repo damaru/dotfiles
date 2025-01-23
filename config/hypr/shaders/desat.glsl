@@ -96,8 +96,8 @@ void main() {
     float v = n.z;
     //n = hsv2rgb(vec3(h,s,gs_color.r));
     v = gs_color.r;
-    v = v * (1.0 -  0.1 * abs(0.5 - v));
-    n = hsv2rgb(vec3(h,0.3 * s,v));
+    v = v * (1.0 -  0.15 * abs(0.5 -  v * v));
+    n = hsv2rgb(vec3(h,0.5 * s,v));
     gl_FragColor = vec4(n, c.a);
 }
 
